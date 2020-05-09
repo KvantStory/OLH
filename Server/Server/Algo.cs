@@ -44,6 +44,17 @@ namespace Server
         private int sum = 0;// сумма выгоды
         private int newSum = 0;// промежуточная сумма
 
+        //структура точек возможного размещения
+        struct point
+        {
+            public int w;
+            public int l;
+            public int dno;
+            public int idSam;
+        };
+        point[] stp = new point[1];
+
+
         //обнуление и заполнение переменных
         public Algo()
         {
