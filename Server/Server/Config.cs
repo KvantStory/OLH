@@ -26,7 +26,7 @@ namespace Server
 
             Host = settings[0];
             Password = settings[1];
-            Ip = settings[2];
+            //Ip = settings[2];
             PortDatabase = settings[3];
             Database = settings[4];
             Username = settings[5];
