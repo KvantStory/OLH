@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Server
 {
     internal class Algo
     {
+        public List<Data.InfoPlane> InfosPlane { get; set; } = new List<Data.InfoPlane>();
+        public List<Data.InfoPlane> Work()
+        {
+            return InfosPlane;
+        }
+
         public struct sam
         {
             public int id; // id в базе
@@ -56,8 +63,12 @@ namespace Server
 
 
         //обнуление и заполнение переменных
-        public Algo()
+        public Algo(List<Data.InfoPlane> infosPlane)
         {
+            InfosPlane.Add(infosPlane[1]);
+            InfosPlane.Add(infosPlane[3]);
+
+            /*
             stp[0].w = 0;
             stp[0].l = 0;
             stp[0].dno = an.h;
@@ -83,7 +94,7 @@ namespace Server
                 r = ran.Next(500, 700);
                 masSam[i].s = r;
             }
-
+            */
         }
 
         //алгоритм поиска

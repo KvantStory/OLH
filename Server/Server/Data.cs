@@ -29,7 +29,7 @@ namespace Server
         public class InfoPlane//Инфо о самолёте
         {
             public InfoPlane(int id, string name, DateTime starttime, int with, int height, DateTime finishtime, DateTime time, int leught, int x, int y,
-                int planeheignt, int money, int onedaymoney, bool haveoneplane, int errormoney)
+                int planeheignt, int money, int onedaymoney, int errormoney)
             {
                 ID = id;
                 Name = name;
@@ -44,7 +44,6 @@ namespace Server
                 PlaneHeight = planeheignt;
                 Money = money;
                 OneDayMoney = onedaymoney;
-                HaveOnePlane = haveoneplane;
                 ErrorMoney = errormoney;
             }
 

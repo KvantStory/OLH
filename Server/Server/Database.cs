@@ -47,11 +47,10 @@ namespace Server
                 int planeheight = read.GetInt32("planeheight");
                 int money = read.GetInt32("money");
                 int onedaymoney = read.GetInt32("onedaymoney");
-                bool haveoneplane = read.GetBoolean("haveoneplane");
                 int errormoney = read.GetInt32("errormoney");
 
                 infos.Add(new Data.InfoPlane(idplane, name, starttime, with, height, finishtime, time, length, x, y, planeheight, money, 
-                    onedaymoney, haveoneplane, errormoney));
+                    onedaymoney, errormoney));
             }
 
             return infos;

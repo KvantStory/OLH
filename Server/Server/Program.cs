@@ -1,5 +1,7 @@
 ﻿using Konsole;
+using Org.BouncyCastle.Asn1.Crmf;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -90,7 +92,14 @@ namespace Server
                     database.AddHagar(with, height, length, name);
                     SendHangars(clientInfo);
                 }
-                
+                else if (answer.Contains("UPDPOZ"))
+                {
+                    Algo algo = new Algo(database.GetInfoPlanes());
+                    List<Data.InfoPlane> infos = algo.Work();
+                    foreach (Data.InfoPlane i in infos)
+                        clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}"));
+                    
+                }
             }
         }
 
