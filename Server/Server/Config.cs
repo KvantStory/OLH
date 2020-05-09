@@ -18,7 +18,7 @@ namespace Server
         public string Username { get; set; } = "admin";
 
         //Какой порт для сервера
-        public string Port { get; set; } = "907";
+        public string Port { get; set; } = "2845";
 
         public Config()//Просто загрузка инфы
         {

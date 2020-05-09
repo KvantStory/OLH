@@ -11,7 +11,7 @@ namespace Server
     {
         public MySqlConnection connection { get; set; }
 
-        public Database(string host, string port, string database, string username, string password)
+        public Database()
         {
             string ihost = "37.29.78.130";
             int iport = 3311;
@@ -27,6 +27,12 @@ namespace Server
             connection.Open();
         }
 
+        public void AddHagar(string with, string height, string length, string name)//Добавить ангар
+        {
+            var command = new MySqlCommand($"INSERT INTO `hangars` (`namehangar`, `with`, `height`, `length`, `countplane`, `nametable`) VALUES ('{name}', {with}, {height}, {length}, 0, '{name}table');", connection);
+            command.ExecuteNonQuery();
+        }
+
         public List<Data.InfoHangar> GetAnyHangar()//Получить все ангары
         {
             
@@ -34,7 +40,6 @@ namespace Server
             var read = command.ExecuteReader();
             var infos = new List<Data.InfoHangar>();
 
-            int i = 0;
             while (read.Read())
             {
                 int idhangar  = read.GetInt32("idhangar");

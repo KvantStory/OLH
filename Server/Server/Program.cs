@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Org.BouncyCastle.Asn1.Anssi;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Server
 {
@@ -24,7 +25,7 @@ namespace Server
             var config = new Config();
 
             prog.Refresh(3, "Соединение с базой данной...");
-            database = new Database(config.Host, config.Password, config.Database, config.Username, config.Password);
+            //database = new Database(config.Host, config.Password, config.Database, config.Username, config.Password);
 
             prog.Refresh(4, "Запуск сервера...");
             Data.Server = new TcpListener(IPAddress.Any, int.Parse(config.Port));
@@ -57,6 +58,7 @@ namespace Server
 
             foreach (Data.InfoHangar info in infos)
             {
+                Task.Delay(1000).Wait();
                 clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP:{info.IdHangar}:{info.NameHangar}:{info.CountPlane}"));
             }
         }
@@ -65,12 +67,25 @@ namespace Server
         {
             var clientInfo = (Data.ClientInfo)obj;
             SendHangars(clientInfo);
+            byte[] buffer = new byte[1024];
 
             while (true)
             {
                 Task.Delay(10).Wait();
+                int messI = clientInfo.TcpClient.Client.Receive(buffer);
+                string answer = Encoding.UTF8.GetString(buffer, 0, messI);
 
+                if (answer.Contains("ADDA"))//Добавление
+                {
+                    var regex = Regex.Match(answer, "ADDA:(.*):(.*):(.*):(.*)");
+                    string with = regex.Groups[1].Value;
+                    string height = regex.Groups[2].Value;
+                    string length = regex.Groups[3].Value;
+                    string name = regex.Groups[4].Value;
 
+                    database.AddHagar(with, height, length, name);
+                    SendHangars(clientInfo);
+                }
             }
         }
 
