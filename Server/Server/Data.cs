@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Net.Sockets;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Net.Sockets;
 
 namespace Server
 {
-    static public class Data//Вся инфа
+    public static class Data//Вся инфа
     {
         #region Параметры
 

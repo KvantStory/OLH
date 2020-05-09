@@ -1,28 +1,27 @@
-﻿using System;
-using Konsole;
+﻿using Konsole;
+using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
-using System.Threading;
-using Org.BouncyCastle.Asn1.Anssi;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Server
 {
-    class Program
+    internal class Program
     {
-        static Database database { get; set; }
+        private static Database database { get; set; }
 
-        static void Main(string[] args)//Запуск
+        private static void Main(string[] args)//Запуск
         {
-            var prog = new ProgressBar(PbStyle.SingleLine, 5);
+            ProgressBar prog = new ProgressBar(PbStyle.SingleLine, 5);
 
             prog.Refresh(1, "Загрузка логов...");
             Data.Loger.AutoFlush = true;
 
             prog.Refresh(2, "Загрузка конфига...");
-            var config = new Config();
+            Config config = new Config();
 
             prog.Refresh(3, "Соединение с базой данной...");
             database = new Database();
@@ -55,11 +54,11 @@ namespace Server
 
         #region Прослушка клиента
 
-        static void SendHangars(Data.ClientInfo clientInfo)//Отправка всех ангаров (после подключение клиента)
+        private static void SendHangars(Data.ClientInfo clientInfo)//Отправка всех ангаров (после подключение клиента)
         {
             //Получение ангаров
 
-            var infos = database.GetAnyHangar();
+            System.Collections.Generic.List<Data.InfoHangar> infos = database.GetAnyHangar();
 
             foreach (Data.InfoHangar info in infos)
             {
@@ -68,9 +67,9 @@ namespace Server
             }
         }
 
-        static void ListenClient(object obj)//Сама прослушка клиента
+        private static void ListenClient(object obj)//Сама прослушка клиента
         {
-            var clientInfo = (Data.ClientInfo)obj;
+            Data.ClientInfo clientInfo = (Data.ClientInfo)obj;
             SendHangars(clientInfo);
             byte[] buffer = new byte[1024];
 
@@ -82,7 +81,7 @@ namespace Server
 
                 if (answer.Contains("ADDA"))//Добавление
                 {
-                    var regex = Regex.Match(answer, "ADDA:(.*):(.*):(.*):(.*)");
+                    Match regex = Regex.Match(answer, "ADDA:(.*):(.*):(.*):(.*)");
                     string with = regex.Groups[1].Value;
                     string height = regex.Groups[2].Value;
                     string length = regex.Groups[3].Value;
@@ -98,13 +97,13 @@ namespace Server
 
         #region Подключение клиента
 
-        static Data.ClientCheck CheckClient(TcpClient client)//Проверка клиента
+        private static Data.ClientCheck CheckClient(TcpClient client)//Проверка клиента
         {
             //TODO
             return new Data.ClientCheck(true, new Data.ClientInfo(Data.TypeClient.Admin, "test", client));
         }
 
-        static void ConnectingClient()//Ловить клиентов
+        private static void ConnectingClient()//Ловить клиентов
         {
             while (true)
             {
@@ -112,10 +111,10 @@ namespace Server
                 TcpClient client = Data.Server.AcceptTcpClient();
                 Functions.WriteLine("Новый клиент подключился!", ConsoleColor.Green);
 
-                var statusClient = CheckClient(client);
+                Data.ClientCheck statusClient = CheckClient(client);
                 if (statusClient.IsDatabase)
                 {
-                    var clientInfo = new Data.ClientInfo(statusClient.ClientInfo.TypeClient, statusClient.ClientInfo.Name, client);
+                    Data.ClientInfo clientInfo = new Data.ClientInfo(statusClient.ClientInfo.TypeClient, statusClient.ClientInfo.Name, client);
                     Thread thread = new Thread(new ParameterizedThreadStart(new ParameterizedThreadStart(ListenClient)));
                     thread.Start(clientInfo);
                 }

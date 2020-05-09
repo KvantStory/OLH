@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Server
 {
-    class Algo
+    internal class Algo
     {
-        public string sam { get; set; }
-
         public struct sam
         {
             public int id; // id в базе
@@ -15,7 +11,7 @@ namespace Server
             public int nom_dogovora;//номер договора
             public int s;//прибыль
             public int time; // время ремонта
-            DateTime srok; // крайний срок
+            private DateTime srok; // крайний срок
 
             public int w;//ширина
             public int l;//длинна
@@ -38,17 +34,15 @@ namespace Server
             public int arenda;//аренда ангара в сутки
         };
 
-        const col = 15; //количество самолетов
-        
+        private const int col = 15; //количество самолетов
 
-        public sam[] masSam = new sam[15]; //массив самолетов
-        public sam[] masSamReady = new sam[15];// массив выгодных самолетов
-        dom an;// ангар
-        Random ran = new Random();
-
-        int combo = 0; // кол-во возможных комбинаций
-        int sum = 0;// сумма выгоды
-        int newSum = 0;// промежуточная сумма
+        public sam[] masSam = new sam[col]; //массив самолетов
+        public sam[] masSamReady = new sam[col];// массив выгодных самолетов
+        private dom an;// ангар
+        private Random ran = new Random();
+        private int combo = 0; // кол-во возможных комбинаций
+        private int sum = 0;// сумма выгоды
+        private int newSum = 0;// промежуточная сумма
 
         //обнуление и заполнение переменных
         public Algo()
@@ -84,8 +78,6 @@ namespace Server
         //алгоритм поиска
         public void sort(sam[] revolver, dom Ang, point[] t, int schet)
         {
-            
-
             if (revolver.Length < 1)
             {
                 combo++;
@@ -93,8 +85,6 @@ namespace Server
                 {
                     sum = newSum;
                     newSum = 0;
-
-
                 }
                 return;
             }
@@ -107,10 +97,25 @@ namespace Server
                 buf.aw = tn.w;
                 buf.al = tn.l;
 
-                if (buf.h > Ang.h) ok = false;
-                if (buf.w + tn.w > Ang.w) ok = false;
-                if (buf.l + tn.l > Ang.l) ok = false;
-                if (Buter(masSamReady, buf, schet)) ok = false;
+                if (buf.h > Ang.h)
+                {
+                    ok = false;
+                }
+
+                if (buf.w + tn.w > Ang.w)
+                {
+                    ok = false;
+                }
+
+                if (buf.l + tn.l > Ang.l)
+                {
+                    ok = false;
+                }
+
+                if (Buter(masSamReady, buf, schet))
+                {
+                    ok = false;
+                }
 
                 if (ok)
                 {
@@ -125,13 +130,21 @@ namespace Server
                     schet++;
 
                     sam[] newRevolver = new sam[revolver.Length - 1];
-                    for (int i = 1; i < revolver.Length; i++) newRevolver[i - 1] = revolver[i];
+                    for (int i = 1; i < revolver.Length; i++)
+                    {
+                        newRevolver[i - 1] = revolver[i];
+                    }
+
                     sort(newRevolver, Ang, tnew, schet);
                 }
                 else
                 {
                     sam[] newRevolver = new sam[revolver.Length - 1];
-                    for (int i = 1; i < revolver.Length; i++) newRevolver[i - 1] = revolver[i];
+                    for (int i = 1; i < revolver.Length; i++)
+                    {
+                        newRevolver[i - 1] = revolver[i];
+                    }
+
                     sort(newRevolver, Ang, t, schet);
                 }
             }

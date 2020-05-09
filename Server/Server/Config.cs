@@ -1,11 +1,4 @@
-﻿using Org.BouncyCastle.Crypto.Agreement;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Reflection;
-
-namespace Server
+﻿namespace Server
 {
     public class Config//Конфиг!
     {

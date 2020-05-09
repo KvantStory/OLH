@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 
 namespace Server
 {
-    static public class Functions//Вот тут функции!
+    public static class Functions//Вот тут функции!
     {
         #region Для сервера
 
-        static public void OffServer()//Отключить сервер
+        public static void OffServer()//Отключить сервер
         {
             WriteLine("Отключение всех клиентов...", ConsoleColor.Yellow);
             foreach (Data.ClientInfo client in Data.ClientsInfo)
@@ -25,7 +22,7 @@ namespace Server
 
         #region Дизайн
 
-        static public void WriteLine(string text, ConsoleColor color)//Писать
+        public static void WriteLine(string text, ConsoleColor color)//Писать
         {
             Console.ForegroundColor = color;
             Console.WriteLine(text);
@@ -33,7 +30,7 @@ namespace Server
             //TODO: Логи
         }
 
-        static public string ReadLine(string text, ConsoleColor color)//Получать
+        public static string ReadLine(string text, ConsoleColor color)//Получать
         {
             Console.ForegroundColor = color;
             Console.Write(text);

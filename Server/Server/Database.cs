@@ -1,9 +1,6 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 
 namespace Server
 {
@@ -29,20 +26,20 @@ namespace Server
 
         public void AddHagar(string with, string height, string length, string name)//Добавить ангар
         {
-            var command = new MySqlCommand($"INSERT INTO `hangars` (`namehangar`, `with`, `height`, `length`, `countplane`, `nametable`) VALUES ('{name}', {with}, {height}, {length}, 0, '{name}table');", connection);
+            MySqlCommand command = new MySqlCommand($"INSERT INTO `hangars` (`namehangar`, `with`, `height`, `length`, `countplane`, `nametable`) VALUES ('{name}', {with}, {height}, {length}, 0, '{name}table');", connection);
             command.ExecuteNonQuery();
         }
 
         public List<Data.InfoHangar> GetAnyHangar()//Получить все ангары
         {
-            
+
             MySqlCommand command = new MySqlCommand("SELECT * FROM hangars", connection);
-            var read = command.ExecuteReader();
-            var infos = new List<Data.InfoHangar>();
+            MySqlDataReader read = command.ExecuteReader();
+            List<Data.InfoHangar> infos = new List<Data.InfoHangar>();
 
             while (read.Read())
             {
-                int idhangar  = read.GetInt32("idhangar");
+                int idhangar = read.GetInt32("idhangar");
                 string namehangar = read.GetString("namehangar");
                 string with = read.GetString("with");
                 string heignt = read.GetString("height");
@@ -50,7 +47,7 @@ namespace Server
                 string countplane = read.GetString("countplane");
                 string nametable = read.GetString("nametable");
 
-                var info = new Data.InfoHangar();
+                Data.InfoHangar info = new Data.InfoHangar();
                 info.IdHangar = idhangar;
                 info.NameHangar = namehangar;
                 info.With = with;
