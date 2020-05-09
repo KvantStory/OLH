@@ -25,7 +25,7 @@ namespace Server
             var config = new Config();
 
             prog.Refresh(3, "Соединение с базой данной...");
-            //database = new Database(config.Host, config.Password, config.Database, config.Username, config.Password);
+            database = new Database();
 
             prog.Refresh(4, "Запуск сервера...");
             Data.Server = new TcpListener(IPAddress.Any, int.Parse(config.Port));
@@ -43,7 +43,12 @@ namespace Server
 
                 if (answer.ToLower() == "stop")
                 {
-                    Functions.OffServer();
+                    try
+                    {
+                        Functions.OffServer();
+                        database.connection.Close();
+                    }
+                    catch { }
                 }
             }
         }
