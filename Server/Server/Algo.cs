@@ -45,7 +45,7 @@ namespace Server
         private int newSum = 0;// промежуточная сумма
 
         //структура точек возможного размещения
-        struct point
+        public struct point
         {
             public int w;
             public int l;

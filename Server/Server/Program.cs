@@ -34,7 +34,7 @@ namespace Server
 
             prog.Refresh(5, "Готово!");
 
-            database.GetAnyHangar();
+            
 
             while (true)
             {
@@ -90,6 +90,7 @@ namespace Server
                     database.AddHagar(with, height, length, name);
                     SendHangars(clientInfo);
                 }
+                
             }
         }
 

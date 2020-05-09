@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Crypto.Digests;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 
@@ -23,7 +26,46 @@ namespace Server
 
         #region Разное
 
-        public class InfoHangar//Инфо о ангарах
+        public class InfoPlane//Инфо о самолёте
+        {
+            public InfoPlane(int id, string name, DateTime starttime, int with, int height, DateTime finishtime, DateTime time, int leught, int x, int y,
+                int planeheignt, int money, int onedaymoney, bool haveoneplane, int errormoney)
+            {
+                ID = id;
+                Name = name;
+                StartTime = starttime;
+                With = with;
+                Height = height;
+                FinishTime = finishtime;
+                Time = time;
+                Leugth = leught;
+                X = x;
+                Y = y;
+                PlaneHeight = planeheignt;
+                Money = money;
+                OneDayMoney = onedaymoney;
+                HaveOnePlane = haveoneplane;
+                ErrorMoney = errormoney;
+            }
+
+            public int ID { get; set; }
+            public string Name { get; set; }
+            public DateTime StartTime { get; set; }
+            public int With { get; set; }
+            public int Height { get; set; }
+            public DateTime FinishTime { get; set; }
+            public DateTime Time { get; set; }
+            public int Leugth { get; set; }
+            public int X { get; set; }
+            public int Y { get; set; }
+            public int PlaneHeight { get; set; }
+            public int Money { get; set; }
+            public int OneDayMoney { get; set; }
+            public bool HaveOnePlane { get; set; }
+            public int ErrorMoney { get; set; }
+        }
+
+        public struct InfoHangar//Инфо о ангарах
         {
             public int IdHangar { get; set; }
             public string NameHangar { get; set; }
