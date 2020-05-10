@@ -1,5 +1,4 @@
 ﻿using Konsole;
-using Org.BouncyCastle.Asn1.Crmf;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -57,21 +56,36 @@ namespace Server
                     }
                     catch { }
                 }
+                else if (answer.ToLower() == "a")
+                {
+                    Algo.point[] stp = new Algo.point[1];
+                    stp[0].w = 0;
+                    stp[0].l = 0;
+
+                    Algo.masSamReady = new Algo.sam[0];
+
+                    Algo.sum = 0;
+                    Algo.masSam = new Algo.sam[2];
+                    Algo.newSum = 0;
+                    Algo.sort(Algo.masSam.Length, stp, Algo.masSamReady, 1000000, Algo.sum);
+                    foreach (Algo.sam i in Algo.masSamReady)
+                        Console.WriteLine(i.id);
+                }
             }
         }
 
-        static void TikTak()//Чтобы считать каждый день
+        private static void TikTak()//Чтобы считать каждый день
         {
             Data.SetTime = DateTime.Now;
             while (true)
             {
                 Task.Delay(1000).Wait();
 
-                if(DateTime.Now.Day != Data.SetTime.Day)
+                if (DateTime.Now.Day != Data.SetTime.Day)
                 {
                     //Изменение времени во всех самолётах
 
-                    
+
                 }
             }
         }
@@ -129,9 +143,10 @@ namespace Server
                 {
                     try
                     {
-                        Algo algo = new Algo(database.GetInfoPlanes());
-                        List<Data.InfoPlane> infos = algo.Work();
+                        
+                        List<Data.InfoPlane> infos = database.GetInfoPlanes();
                         foreach (Data.InfoPlane i in infos)
+                        {
                             //clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}"));
 
                             //clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}:{i.Height}:{i.Leugth}:{i.Money}:{i.Name}:{i.OneDayMoney}:{i.PlaneHeight}:" +
@@ -139,6 +154,7 @@ namespace Server
 
                             clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP:{i.ID}:{i.Name}:{i.X}:{i.Y}:{i.StartTime.Date}:{i.FinishTime.Date}:" +
                                 $"{i.Time.Date}:{i.Leugth}:{i.With}:{i.Money}:{i.OneDayMoney}:{i.ErrorMoney}"));
+                        }
 
                         Functions.WriteLine($"RUPDP от {clientInfo.TcpClient.Client.RemoteEndPoint}", ConsoleColor.Green);
                     }
@@ -159,11 +175,11 @@ namespace Server
                         Functions.WriteLine($"ERROR UPDA: {ex.Message}", ConsoleColor.Red);
                     }
                 }
-                else if(answer.Contains("UPDP"))//Получение данных о самолёте по id ангара
+                else if (answer.Contains("UPDP"))//Получение данных о самолёте по id ангара
                 {
                     try
                     {
-                        var planes = database.GetPlanes(int.Parse(answer.Substring(5)));//Лютая херня!!!
+                        List<Data.InfoPlane> planes = database.GetPlanes(int.Parse(answer.Substring(5)));//Лютая херня!!!
 
                         foreach (Data.InfoPlane plane in planes)
                         {

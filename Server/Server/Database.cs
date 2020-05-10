@@ -1,9 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Asn1.Cms;
-using Org.BouncyCastle.Asn1.Crmf;
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace Server
 {
@@ -32,7 +29,7 @@ namespace Server
             MySqlCommand command = new MySqlCommand($"SELECT nametable FROM hangars WHERE idhangar = {id}", connection);
             string nametable = command.ExecuteScalar().ToString();
             command = new MySqlCommand($"SELECT * FROM {nametable}", connection);
-            var read = command.ExecuteReader();
+            MySqlDataReader read = command.ExecuteReader();
             List<Data.InfoPlane> info = new List<Data.InfoPlane>();
             List<int> ids = new List<int>();
             while (read.Read())
@@ -47,7 +44,7 @@ namespace Server
             {
                 commandstrings += $"`idplane` = {i} AND ";
             }
-            
+
             command.Dispose();
             read.Close();
 
@@ -141,7 +138,7 @@ namespace Server
                 int onedaymoney = read.GetInt32("onedaymoney");
                 int errormoney = read.GetInt32("errormoney");
 
-                infos.Add(new Data.InfoPlane(idplane, name, starttime, with, height, finishtime, time, length, x, y, planeheight, money, 
+                infos.Add(new Data.InfoPlane(idplane, name, starttime, with, height, finishtime, time, length, x, y, planeheight, money,
                     onedaymoney, errormoney));
             }
 

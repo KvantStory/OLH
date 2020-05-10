@@ -3,13 +3,9 @@ using System.Collections.Generic;
 
 namespace Server
 {
-    internal class Algo
+    static class Algo
     {
-        public List<Data.InfoPlane> InfosPlane { get; set; } = new List<Data.InfoPlane>();
-        public List<Data.InfoPlane> Work()
-        {
-            return InfosPlane;
-        }
+        static public List<Data.InfoPlane> InfosPlane { get; set; } = new List<Data.InfoPlane>();
 
         public struct sam
         {
@@ -43,16 +39,17 @@ namespace Server
 
         private const int col = 15; //количество самолетов
 
-        public sam[] masSam = new sam[col]; //массив самолетов
-        public sam[] masSamReady = new sam[col];// массив выгодных самолетов
-        private dom an;// ангар
-        private Random ran = new Random();
-        private int combo = 0; // кол-во возможных комбинаций
-        private int sum = 0;// сумма выгоды
-        private int newSum = 0;// промежуточная сумма
-        //новые
-        long iter = 0;
-        long stopIter = 0;
+        static public sam[] masSam = new sam[col]; //массив самолетов
+        static public sam[] masSamReady = new sam[col];// массив выгодных самолетов
+        static private dom an;// ангар
+        static private Random ran = new Random();
+        static private int combo = 0; // кол-во возможных комбинаций
+        static public int sum = 0;// сумма выгоды
+        static public int newSum = 0;// промежуточная сумма
+                                      //новые
+
+        static private long iter = 0;
+        static private long stopIter = 0;
 
 
         //структура точек возможного размещения
@@ -63,51 +60,22 @@ namespace Server
             public int dno;
             public int idSam;
         };
-        point[] stp = new point[1];
+
+        static private point[] stp = new point[1];
 
 
         //обнуление и заполнение переменных
-        public Algo(List<Data.InfoPlane> infosPlane)
-        {
-            InfosPlane.Add(infosPlane[1]);
-            InfosPlane.Add(infosPlane[3]);
-
-          //  public void sort(sam[] revolver, dom Ang, point[] t, int schet)
-            /*
-            stp[0].w = 0;
-            stp[0].l = 0;
-            stp[0].dno = an.h;
-            int r = 0;
-            //размеры аэропорта
-            an.h = 400;//ширина
-            an.l = 450;//длинна
-            an.w = 30;//высота
-
-            //заполнение массива случайными самолетами
-            for (int i = 0; i < masSam.Length; i++)
-            {
-                masSam[i].id = i;
-                r = ran.Next(0, 70);
-                masSam[i].w = 20 + r;
-                r = ran.Next(0, 70);
-                masSam[i].l = 35 + r;
-                r = ran.Next(0, 5);
-                masSam[i].hd = 1 + r;
-                r = ran.Next(0, 10);
-                masSam[i].h = masSam[i].hd + r;
-
-                r = ran.Next(500, 700);
-                masSam[i].s = r;
-            }
-            */
-        }
 
         //алгоритм поиска
-        public void sort(int look, point[] t, sam[] masGood, long kof, int newSum1)
+        static public void sort(int look, point[] t, sam[] masGood, long kof, int newSum1)
         {
             iter++;
             //if (iter > stopIter) return;
-            if (combo > 10000000) return;
+            if (combo > 10000000)
+            {
+                return;
+            }
+
             if (look < 1)
             {
                 combo++;
@@ -134,6 +102,7 @@ namespace Server
             }
 
             for (int i = masSam.Length - look; i < masSam.Length; i++)
+            {
                 for (int v = 0; v < t.Length; v++)
                 {
 
@@ -152,7 +121,7 @@ namespace Server
                         buf.aw = t[v].w;
                         buf.al = t[v].l;
 
-                        if (!Buter2(masGood, buf))
+                        if (!Buter(masGood, buf))
                         {
                             point[] tnew = new point[t.Length + 2];
 
@@ -197,10 +166,10 @@ namespace Server
                     }
 
                 }
-
+            }
         }
         //проверка наложения друг на друга
-        public bool Buter(sam[] masProv, sam prov)
+        static public bool Buter(sam[] masProv, sam prov)
         {
             bool peresechenir = false;
             int ax1 = prov.aw;
@@ -227,12 +196,15 @@ namespace Server
 
                     peresechenir = (s1 && s2) || (s3 && s4) || (s2 && s3) || (s1 || s4);
                     peresechenir = (s1 && s2) || (s3 && s4) || (s2 && s3) || (s1 || s4);
-                    if (peresechenir) return true;
+                    if (peresechenir)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
         }
 
-
     }
+
 }
