@@ -68,6 +68,7 @@ namespace Server
             InfosPlane.Add(infosPlane[1]);
             InfosPlane.Add(infosPlane[3]);
 
+          //  public void sort(sam[] revolver, dom Ang, point[] t, int schet)
             /*
             stp[0].w = 0;
             stp[0].l = 0;
@@ -100,111 +101,116 @@ namespace Server
         //алгоритм поиска
         public void sort(sam[] revolver, dom Ang, point[] t, int schet)
         {
-            if (revolver.Length < 1)
+            iter++;
+            //if (iter > stopIter) return;
+            if (combo > 10000000) return;
+            if (look < 1)
             {
                 combo++;
+
+                for (int i = 0; i < masGood.Length; i++)
+                {
+                    newSum = newSum + masGood[i].s;
+                }
+
                 if (newSum > sum)
                 {
                     sum = newSum;
+                    //if (combo > kof) return;
+                    masSamReady = new sam[masGood.Length];
+                    for (int k = 0; k < masGood.Length; k++)
+                    {
+                        masSamReady[k] = masGood[k];
+                    }
                     newSum = 0;
+
                 }
+                newSum = 0;
                 return;
             }
 
-            foreach (point tn in t)
-            {
-                bool ok = true;
-                sam buf = revolver[0];
-
-                buf.aw = tn.w;
-                buf.al = tn.l;
-
-                if (buf.h > Ang.h)
-                {
-                    ok = false;
-                }
-
-                if (buf.w + tn.w > Ang.w)
-                {
-                    ok = false;
-                }
-
-                if (buf.l + tn.l > Ang.l)
-                {
-                    ok = false;
-                }
-
-                if (Buter(masSamReady, buf, schet))
-                {
-                    ok = false;
-                }
-
-                if (ok)
+            for (int i = masSam.Length - look; i < masSam.Length; i++)
+                for (int v = 0; v < t.Length; v++)
                 {
 
-                    point[] tnew = new point[t.Length + 2];
-                    tnew[t.Length].w = buf.w + tn.w;
-                    tnew[t.Length].l = tn.l;
-                    tnew[t.Length - 1].l = buf.l + tn.l;
-                    tnew[t.Length - 1].w = tn.w;
-                    newSum += buf.s;
-                    masSamReady[schet] = buf;
-                    schet++;
 
-                    sam[] newRevolver = new sam[revolver.Length - 1];
-                    for (int i = 1; i < revolver.Length; i++)
+                    if ((masSam[i].h > an.h) || (masSam[i].w + t[v].w > an.w) || (masSam[i].l + t[v].l > an.l))
                     {
-                        newRevolver[i - 1] = revolver[i];
+                        look--;
+                        sort(look, t, masGood, kof, newSum);
+                        look++;
+
+                    }
+                    else
+                    {
+                        sam buf = new sam();
+                        buf = masSam[i];
+                        buf.aw = t[v].w;
+                        buf.al = t[v].l;
+
+                        if (!Buter2(masGood, buf))
+                        {
+                            point[] tnew = new point[t.Length + 2];
+
+                            byte pl = 0;
+                            for (int y = 0; y < t.Length; y++)
+                            {
+                                if (y == v) { pl = 1; continue; }
+                                tnew[y - pl] = t[y];
+                            }
+                            tnew[tnew.Length - 3].w = buf.w + 1 + buf.aw;
+                            tnew[tnew.Length - 3].l = buf.l + buf.al + 1;
+                            tnew[tnew.Length - 2].w = buf.w + 1 + buf.aw;
+                            tnew[tnew.Length - 2].l = buf.al;
+                            tnew[tnew.Length - 1].l = buf.l + buf.al + 1;
+                            tnew[tnew.Length - 1].w = buf.aw;
+
+                            sam[] newMasGood = new sam[masGood.Length + 1];
+
+                            // if(masGood.Length > 0)
+                            for (int k = 0; k < masGood.Length; k++)
+                            {
+                                newMasGood[k] = masGood[k];
+                            }
+
+                            newMasGood[newMasGood.Length - 1] = buf;
+                            //newSum = newSum + buf.s;
+
+
+                            look--;
+                            sort(look, tnew, newMasGood, kof, newSum);
+                            look++;
+                            //newSum = newSum - buf.s;
+                            // break;
+
+                        }
+                        else
+                        {
+                            look--;
+                            sort(look, t, masGood, kof, newSum);
+                            look++;
+                        }
                     }
 
-                    sort(newRevolver, Ang, tnew, schet);
                 }
-                else
-                {
-                    sam[] newRevolver = new sam[revolver.Length - 1];
-                    for (int i = 1; i < revolver.Length; i++)
-                    {
-                        newRevolver[i - 1] = revolver[i];
-                    }
-
-                    sort(newRevolver, Ang, t, schet);
-                }
-            }
 
         }
         //проверка наложения друг на друга
-        public bool Buter(sam[] masProv, sam prov, int schet)
+        public bool Buter(sam[] masProv, sam prov)
         {
-            bool peresechenir = false;
-            int ax1 = prov.aw;
-            int ay1 = prov.al;
-            int ax2 = prov.w;
-            int ay2 = prov.l;
+            Rect sam1 = new Rect();
+            sam1.Size = new System.Windows.Size(prov.w, prov.l);
+            sam1.Location = new System.Windows.Point(prov.aw, prov.al);
 
-            ax2 = ax1 + ax2;
-            ay2 = ay1 + ay2;
-
-            for (int i = 0; i < schet; i++)
+            for (int i = 0; i < masProv.Length; i++)
             {
-                if (schet > 0)
-                {
-                    int bx1 = masProv[i].aw;
-                    int by1 = masProv[i].al;
-                    int bx2 = masProv[i].w;
-                    int by2 = masProv[i].l;
+                Rect sam2 = new Rect();
+                sam2.Size = new System.Windows.Size(masProv[i].w, masProv[i].l);
+                sam2.Location = new System.Windows.Point(masProv[i].aw, masProv[i].al);
 
-                    bx2 = bx1 + bx2;
-                    by2 = by1 + by2;
-
-                    bool s1 = ((ax1 >= bx1) && (ax1 <= bx2)) || ((ax2 >= bx1 && ax2 <= bx2));
-                    bool s2 = ((ay1 >= by1) && (ay1 <= by2)) || ((ay2 >= by1 && ay2 <= by2));
-                    bool s3 = ((bx1 >= ax1) && (bx1 <= ax2)) || ((bx2 >= ax1 && bx2 <= ax2));
-                    bool s4 = ((by1 >= ay1) && (by1 <= ay2)) || ((by2 >= ay1 && by2 <= ay2));
-
-                    peresechenir = (s1 && s2) || (s3 && s4) || (s2 && s3) || (s1 && s4);
-                }
+                if (sam1.IntersectsWith(sam2)) return true;
             }
-            return peresechenir;
+            return false;
         }
 
 
