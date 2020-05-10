@@ -15,9 +15,16 @@
 | `Algo`           | Алгоритм                               |
 | `Config`        | Настройка сервера               |
 | `Data`           | Хранение информации         |
-| `Database`    | База данных (MySQL)           |
+| `Database`    | База данных                         |
 | `Functions`    | Функции                               |
 | `Program`     | Управление и запуск             |
+
+# Технологии
+
+* Unity
+* .Net Core 3.1
+* Visual Studio 2019
+* MySql
 
 # Авторы
 
