@@ -43,7 +43,6 @@ namespace Server
 
             prog.Refresh(5, "Готово!");
             Console.Beep();
-            
 
             while (true)
             {
@@ -90,7 +89,7 @@ namespace Server
             foreach (Data.InfoHangar info in infos)
             {
                 Task.Delay(1000).Wait();
-                clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP:{info.IdHangar}:{info.NameHangar}:{info.CountPlane}"));
+                clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDA:{info.IdHangar}:{info.NameHangar}:{info.CountPlane}:{info.Length}:{info.With}"));
             }
         }
 
@@ -105,30 +104,74 @@ namespace Server
                 Task.Delay(10).Wait();
                 int messI = clientInfo.TcpClient.Client.Receive(buffer);
                 string answer = Encoding.UTF8.GetString(buffer, 0, messI);
+                Functions.WriteLine($"Новое подключение от {clientInfo.TcpClient.Client.RemoteEndPoint}", ConsoleColor.Green);
 
                 if (answer.Contains("ADDA"))//Добавление
                 {
-                    Match regex = Regex.Match(answer, "ADDA:(.*):(.*):(.*):(.*)");
-                    string with = regex.Groups[1].Value;
-                    string height = regex.Groups[2].Value;
-                    string length = regex.Groups[3].Value;
-                    string name = regex.Groups[4].Value;
+                    try
+                    {
+                        Match regex = Regex.Match(answer, "ADDA:(.*):(.*):(.*):(.*)");
+                        string with = regex.Groups[1].Value;
+                        string height = regex.Groups[2].Value;
+                        string length = regex.Groups[3].Value;
+                        string name = regex.Groups[4].Value;
 
-                    database.AddHagar(with, height, length, name);
-                    SendHangars(clientInfo);
+                        database.AddHagar(with, height, length, name);
+                        SendHangars(clientInfo);
+                    }
+                    catch (Exception ex)
+                    {
+                        Functions.WriteLine($"ERROR ADDA: {ex.Message}", ConsoleColor.Red);
+                    }
                 }
-                else if (answer.Contains("RUPDP"))//Загрузка инфы о самолётох
+                else if (answer.Contains("RUPDP"))//Загрузка инфы о самолётах
                 {
-                    Algo algo = new Algo(database.GetInfoPlanes());
-                    List<Data.InfoPlane> infos = algo.Work();
-                    foreach (Data.InfoPlane i in infos)
-                        //clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}"));
+                    try
+                    {
+                        Algo algo = new Algo(database.GetInfoPlanes());
+                        List<Data.InfoPlane> infos = algo.Work();
+                        foreach (Data.InfoPlane i in infos)
+                            //clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}"));
 
-                        //clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}:{i.Height}:{i.Leugth}:{i.Money}:{i.Name}:{i.OneDayMoney}:{i.PlaneHeight}:" +
-                        //    $"{i.StartTime}:{i.Time}:{i.With}:{i.ErrorMoney}:{i.FinishTime}"));
+                            //clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}:{i.Height}:{i.Leugth}:{i.Money}:{i.Name}:{i.OneDayMoney}:{i.PlaneHeight}:" +
+                            //    $"{i.StartTime}:{i.Time}:{i.With}:{i.ErrorMoney}:{i.FinishTime}"));
 
-                        clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP:{i.ID}:{i.Name}:{i.X}:{i.Y}:{i.StartTime.Date}:{i.FinishTime.Date}:" +
-                            $"{i.Time.Date}:{i.Leugth}:{i.With}:{i.Money}:{i.OneDayMoney}:{i.ErrorMoney}"));
+                            clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP:{i.ID}:{i.Name}:{i.X}:{i.Y}:{i.StartTime.Date}:{i.FinishTime.Date}:" +
+                                $"{i.Time.Date}:{i.Leugth}:{i.With}:{i.Money}:{i.OneDayMoney}:{i.ErrorMoney}"));
+
+                        Functions.WriteLine($"RUPDP от {clientInfo.TcpClient.Client.RemoteEndPoint}", ConsoleColor.Green);
+                    }
+                    catch (Exception ex)
+                    {
+                        Functions.WriteLine($"ERROR RUPDP: {ex.Message}", ConsoleColor.Red);
+                    }
+                }
+                else if (answer.Contains("UPDA"))//Получение всех ангаров
+                {
+                    try
+                    {
+                        SendHangars(clientInfo);
+                        Functions.WriteLine($"UPDA от {clientInfo.TcpClient.Client.RemoteEndPoint}", ConsoleColor.Green);
+                    }
+                    catch (Exception ex)
+                    {
+                        Functions.WriteLine($"ERROR UPDA: {ex.Message}", ConsoleColor.Red);
+                    }
+                }
+                else if(answer.Contains("UPDP"))//Получение данных о самолёте по id
+                {
+                    try
+                    {
+                        var plane = database.GetPlane(int.Parse(answer.Substring(5)));//Лютая херня!!!
+                        Task.Delay(300).Wait();
+                        clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP;{plane.ID};{plane.Name};{plane.X};{plane.Y};{plane.StartTime.Date};{plane.FinishTime.Date};" +
+                                $"{plane.Time.Date};{plane.Leugth};{plane.With};{plane.Money};{plane.OneDayMoney};{plane.ErrorMoney}"));
+                        Functions.WriteLine($"UPDP от {clientInfo.TcpClient.Client.RemoteEndPoint}", ConsoleColor.Green);
+                    }
+                    catch (Exception ex)
+                    {
+                        Functions.WriteLine($"ERROR UPDP: {ex.Message}", ConsoleColor.Red);
+                    }
                 }
             }
         }

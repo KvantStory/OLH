@@ -48,6 +48,8 @@ namespace Server
                 ErrorMoney = errormoney;
             }
 
+            public InfoPlane() { }
+
             public int ID { get; set; }
             public string Name { get; set; }
             public DateTime StartTime { get; set; }
