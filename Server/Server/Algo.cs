@@ -50,6 +50,10 @@ namespace Server
         private int combo = 0; // кол-во возможных комбинаций
         private int sum = 0;// сумма выгоды
         private int newSum = 0;// промежуточная сумма
+        //новые
+        long iter = 0;
+        long stopIter = 0;
+
 
         //структура точек возможного размещения
         public struct point
@@ -99,7 +103,7 @@ namespace Server
         }
 
         //алгоритм поиска
-        public void sort(sam[] revolver, dom Ang, point[] t, int schet)
+        public void sort(int look, point[] t, sam[] masGood, long kof, int newSum1)
         {
             iter++;
             //if (iter > stopIter) return;
