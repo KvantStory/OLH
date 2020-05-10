@@ -226,7 +226,12 @@ namespace Server
                     //peresechenir = !((ay1 > by2) || (ay2 < by1) || (ax2 < bx1) || (ax1 > bx2));
 
                     peresechenir = (s1 && s2) || (s3 && s4) || (s2 && s3) || (s1 || s4);
+                    peresechenir = (s1 && s2) || (s3 && s4) || (s2 && s3) || (s1 || s4);
+                    if (peresechenir) return true;
                 }
+            }
+            return false;
+        }
 
 
     }
