@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class SelAngar : MonoBehaviour
 {
-    
+
     public void ButClick()
     {
-       // GameObject.Find("Clients").GetComponent<Client>().but_test_void(this.gameObject.transform.GetChild(0).GetComponent<Text>().text);
-        //Debug.Log(this.gameObject.transform.GetChild(0).GetComponent<Text>().text);
+        if (Convert.ToInt32(this.gameObject.transform.GetChild(2).GetComponent<Text>().text) != 0)
+        {
+            GameObject.Find("Client").GetComponent<Client>().UPDP(Convert.ToInt32(this.gameObject.transform.GetChild(0).GetComponent<Text>().text));           
+        }
     }
 }

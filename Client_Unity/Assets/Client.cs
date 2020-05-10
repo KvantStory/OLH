@@ -61,7 +61,7 @@ public class Client : MonoBehaviour
 
     private void Start()
     {
-        //ConnectedToServer();
+        ConnectedToServer();
     }
  
     private void Update()
@@ -89,24 +89,41 @@ public class Client : MonoBehaviour
         message = GameObject.Find("TextPr").GetComponent<Text>().text;
         OnIncomingData();
     }
-
+    public void UPDP(int id)
+    {
+        AContainer.active = false;
+        PContainer.active = true;
+        foreach(GameObject i in GameObject.FindGameObjectsWithTag("contA"))
+        {
+            Destroy(i);
+        }       
+        Send($"UPDP:{id}");
+        Debug.Log($"UPDP:{id}-Send");
+        
+    }
+    public void UPDA()
+    {
+        AContainer.active = true;
+        PContainer.active = false;
+        foreach (GameObject i in GameObject.FindGameObjectsWithTag("contP"))
+        {
+            Destroy(i);
+        }
+        Send("UPDA");
+        Debug.Log("UPDASend");
+    }
 
     private void OnIncomingData()
     {
         if(message.Contains("RUPDA"))
         {
             Match regex = Regex.Match(message, "RUPDA:(.*):(.*):(.*):(.*):(.*)");//RUPDA:id:name:Pcount:длина:ширина
-            Debug.Log(message);
             ///
             string id = regex.Groups[1].Value;
             string name = regex.Groups[2].Value;
             string Pcount = regex.Groups[3].Value;
             string length = regex.Groups[4].Value;
             string width = regex.Groups[5].Value;
-
-            Debug.Log(id);
-            Debug.Log(name);
-            Debug.Log(Pcount);
             ///
             GameObject Ac = Instantiate(Acell, AContainer.transform);
             Ac.transform.GetChild(0).GetComponent<Text>().text = id;
@@ -116,21 +133,23 @@ public class Client : MonoBehaviour
         }
         if(message.Contains("RUPDP"))
         {
-            Match regex = Regex.Match(message, "RUPDP:(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*):(.*)");//RUPDP:id:name:x:y:startTime:endtime:time:status:длина:ширина x12
-            ///
+            Match regex = Regex.Match(message,"RUPDP;(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*)");//RUPDP:id:name:x:y:startTime:endtime:time:status:длина:ширина x12
+            ///                                 RUPDP|1|testplane|10|15|03.02.2099 0:00:00|03.02.2100 0:00:00|03.02.2099 0:00:00|20|20|0|300|1000
             string id = regex.Groups[1].Value;
             string name = regex.Groups[2].Value;
-            int X = Convert.ToInt32(regex.Groups[3].Value);
-            int Y = Convert.ToInt32(regex.Groups[4].Value);
+            int X = int.Parse(regex.Groups[3].Value);
+            int Y = int.Parse(regex.Groups[4].Value);
             string StartTime = regex.Groups[5].Value;
             string FinishTime = regex.Groups[6].Value;
             string Time = regex.Groups[7].Value;
-            int length = Convert.ToInt32(regex.Groups[8].Value);
-            int width = Convert.ToInt32(regex.Groups[9].Value);
+            int length = int.Parse(regex.Groups[8].Value);
+            int width = int.Parse(regex.Groups[9].Value);
             string Money = regex.Groups[10].Value;
             string OneDayMoney = regex.Groups[11].Value;
             string ErrorMoney = regex.Groups[12].Value;
 
+            Task.Delay(60).Wait();
+      
             ///
             GameObject Pc = Instantiate(Pcell, PContainer.transform);
             Pc.transform.GetChild(0).GetComponent<Text>().text = id;
@@ -140,7 +159,7 @@ public class Client : MonoBehaviour
             ///
             GameObject plane = Instantiate(Qplane, Grafic.transform);
             plane.transform.localScale = new Vector3(width * skX, length * skY);
-            plane.transform.position = new Vector3(X * umnojit + otctupX, Y * umnojit + otctupY);       
+            plane.transform.position = new Vector3(X * umnojit + otctupX, Y * umnojit + otctupY);
         }        
     }
 
