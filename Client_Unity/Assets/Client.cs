@@ -14,6 +14,7 @@ public class Client : MonoBehaviour
     [Header("Ячейки судов")]
     public GameObject Pcell;
     public GameObject PContainer;
+    public GameObject ButR;
     [Header("Ячейки ангаров")]
     public GameObject Acell;
     public GameObject AContainer;
@@ -93,10 +94,11 @@ public class Client : MonoBehaviour
     {
         AContainer.active = false;
         PContainer.active = true;
-        foreach(GameObject i in GameObject.FindGameObjectsWithTag("contA"))
+        ButR.active = true;
+        foreach(GameObject i in GameObject.FindGameObjectsWithTag("contP"))
         {
             Destroy(i);
-        }       
+        }
         Send($"UPDP:{id}");
         Debug.Log($"UPDP:{id}-Send");
         
@@ -105,7 +107,8 @@ public class Client : MonoBehaviour
     {
         AContainer.active = true;
         PContainer.active = false;
-        foreach (GameObject i in GameObject.FindGameObjectsWithTag("contP"))
+        ButR.active = false;
+        foreach (GameObject i in GameObject.FindGameObjectsWithTag("contA"))
         {
             Destroy(i);
         }
@@ -147,8 +150,6 @@ public class Client : MonoBehaviour
             string Money = regex.Groups[10].Value;
             string OneDayMoney = regex.Groups[11].Value;
             string ErrorMoney = regex.Groups[12].Value;
-
-            Task.Delay(60).Wait();
       
             ///
             GameObject Pc = Instantiate(Pcell, PContainer.transform);
