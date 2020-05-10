@@ -92,7 +92,7 @@ namespace Server
                     database.AddHagar(with, height, length, name);
                     SendHangars(clientInfo);
                 }
-                else if (answer.Contains("UPDPOZ"))
+                else if (answer.Contains("UPDPOZ"))//Загрузка инфы о самолётох
                 {
                     Algo algo = new Algo(database.GetInfoPlanes());
                     List<Data.InfoPlane> infos = algo.Work();

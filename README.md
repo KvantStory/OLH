@@ -1,8 +1,28 @@
-# OLH
+                            ...      :::      ::   .:  
+                         .;;;;;;;.   ;;;     ,;;   ;;, 
+                        ,[[     \[[, [[[    ,[[[,,,[[[ 
+                        $$$,     $$$ $$'    "$$$"""$$$ 
+                        "888,_ _,88Po88oo,.__888   "88o
+                          "YMMMMMP" """"YUMMMMMM    YMM
+
+***OLH***
 Оптимальная загрузка ангара (by Кванториум НЭЛ)
+
+# Классы
+
+| Название       | Описание  		|
+|----------------|---------------------------------|
+| `Algo`           | Алгоритм                               |
+| `Config`        | Настройка сервера               |
+| `Data`           | Хранение информации         |
+| `Database`    | База данных (MySQL)           |
+| `Functions`    | Функции                               |
+| `Program`     | Управление и запуск             |
 
 # Авторы
 
-1. [Gladi](https://github.com/damiralmaev) `Самый главный (коммунист)`
-2. [Qliook](https://github.com/Qliook) `Антикоммунист`
-2. [maksshamen](https://github.com/maksshamen) `Просто Максим`
+1. [Gladi](https://github.com/damiralmaev) `Был главным (коммунист)`
+2. [Qliook](https://github.com/Qliook) `Самый главный (Антикоммунист)`
+3. [maksshamen](https://github.com/maksshamen) `Просто Максим`
+4. Ирина (ERROR 404)
+5. [SimonGR92](SimonGR92) `Сэр`
