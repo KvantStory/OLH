@@ -202,20 +202,31 @@ namespace Server
         //проверка наложения друг на друга
         public bool Buter(sam[] masProv, sam prov)
         {
-            Rect sam1 = new Rect();
-            sam1.Size = new System.Windows.Size(prov.w, prov.l);
-            sam1.Location = new System.Windows.Point(prov.aw, prov.al);
+            bool peresechenir = false;
+            int ax1 = prov.aw;
+            int ay1 = prov.al;
+            int ax2 = prov.aw + prov.w;
+            int ay2 = prov.al + prov.l;
+
 
             for (int i = 0; i < masProv.Length; i++)
             {
-                Rect sam2 = new Rect();
-                sam2.Size = new System.Windows.Size(masProv[i].w, masProv[i].l);
-                sam2.Location = new System.Windows.Point(masProv[i].aw, masProv[i].al);
+                if (true)
+                {
+                    int bx1 = masProv[i].aw;
+                    int by1 = masProv[i].al;
+                    int bx2 = masProv[i].aw + masProv[i].w;
+                    int by2 = masProv[i].al + masProv[i].l;
 
-                if (sam1.IntersectsWith(sam2)) return true;
-            }
-            return false;
-        }
+                    bool s1 = ((ax1 > bx1) && (ax1 < bx2)) || ((ax2 > bx1 && ax2 < bx2));
+                    bool s2 = ((ay1 > by1) && (ay1 < by2)) || ((ay2 > by1 && ay2 < by2));
+                    bool s3 = ((bx1 > ax1) && (bx1 < ax2)) || ((bx2 > ax1 && bx2 < ax2));
+                    bool s4 = ((by1 > ay1) && (by1 < ay2)) || ((by2 > ay1 && by2 < ay2));
+
+                    //peresechenir = !((ay1 > by2) || (ay2 < by1) || (ax2 < bx1) || (ax1 > bx2));
+
+                    peresechenir = (s1 && s2) || (s3 && s4) || (s2 && s3) || (s1 || s4);
+                }
 
 
     }
