@@ -104,6 +104,7 @@ namespace Server
                 Task.Delay(10).Wait();
                 int messI = clientInfo.TcpClient.Client.Receive(buffer);
                 string answer = Encoding.UTF8.GetString(buffer, 0, messI);
+                Console.WriteLine(answer);
                 Functions.WriteLine($"Новое подключение от {clientInfo.TcpClient.Client.RemoteEndPoint}", ConsoleColor.Green);
 
                 if (answer.Contains("ADDA"))//Добавление
@@ -158,14 +159,20 @@ namespace Server
                         Functions.WriteLine($"ERROR UPDA: {ex.Message}", ConsoleColor.Red);
                     }
                 }
-                else if(answer.Contains("UPDP"))//Получение данных о самолёте по id
+                else if(answer.Contains("UPDP"))//Получение данных о самолёте по id ангара
                 {
                     try
                     {
-                        var plane = database.GetPlane(int.Parse(answer.Substring(5)));//Лютая херня!!!
+                        var planes = database.GetPlanes(int.Parse(answer.Substring(5)));//Лютая херня!!!
                         Task.Delay(300).Wait();
-                        clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP;{plane.ID};{plane.Name};{plane.X};{plane.Y};{plane.StartTime.Date};{plane.FinishTime.Date};" +
-                                $"{plane.Time.Date};{plane.Leugth};{plane.With};{plane.Money};{plane.OneDayMoney};{plane.ErrorMoney}"));
+
+                        foreach (Data.InfoPlane plane in planes)
+                        {
+                            Console.WriteLine(22);
+                            clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP;{plane.ID};{plane.Name};{plane.X};{plane.Y};{plane.StartTime.Date};{plane.FinishTime.Date};" +
+                                    $"{plane.Time.Date};{plane.Leugth};{plane.With};{plane.Money};{plane.OneDayMoney};{plane.ErrorMoney}"));
+                        }
+                        Console.WriteLine(33);
                         Functions.WriteLine($"UPDP от {clientInfo.TcpClient.Client.RemoteEndPoint}", ConsoleColor.Green);
                     }
                     catch (Exception ex)
