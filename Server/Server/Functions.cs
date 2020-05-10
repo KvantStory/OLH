@@ -15,6 +15,7 @@ namespace Server
                 WriteLine($"Клиент {client.Name} отключен!", ConsoleColor.Green);
             }
             Data.Server.Stop();
+            Data.Loger.Close();
             Environment.Exit(0);
         }
 
@@ -27,7 +28,7 @@ namespace Server
             Console.ForegroundColor = color;
             Console.WriteLine(text);
             Console.ResetColor();
-            //TODO: Логи
+            Data.Loger.WriteLine(text);
         }
 
         public static string ReadLine(string text, ConsoleColor color)//Получать
@@ -36,8 +37,8 @@ namespace Server
             Console.Write(text);
             string answer = Console.ReadLine();
             Console.ResetColor();
+            Data.Loger.WriteLine(text);
             return answer;
-            //TODO: Логи
         }
 
         #endregion

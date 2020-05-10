@@ -21,6 +21,7 @@ namespace Server
         public static List<ClientInfo> ClientsInfo { get; set; } = new List<ClientInfo>();//Инфо о клиентах
         public static TcpListener Server { get; set; }//Сервер
         public static StreamWriter Loger { get; set; } = new StreamWriter(LogFile);//Логи
+        public static DateTime SetTime { get; set; }//Какой день сегодня
 
         #endregion
 

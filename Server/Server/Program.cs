@@ -15,8 +15,11 @@ namespace Server
     {
         private static Database database { get; set; }
 
+        #region Прочее
+
         private static void Main(string[] args)//Запуск
         {
+            Console.Title = "Server";
             ProgressBar prog = new ProgressBar(PbStyle.SingleLine, 5);
 
             prog.Refresh(1, "Загрузка логов...");
@@ -31,11 +34,15 @@ namespace Server
             prog.Refresh(4, "Запуск сервера...");
             Data.Server = new TcpListener(IPAddress.Any, int.Parse(config.Port));
             Data.Server.Start();
+
             Thread thread = new Thread(new ThreadStart(ConnectingClient));
             thread.Start();
 
-            prog.Refresh(5, "Готово!");
+            thread = new Thread(new ThreadStart(TikTak));
+            thread.Start();
 
+            prog.Refresh(5, "Готово!");
+            Console.Beep();
             
 
             while (true)
@@ -53,6 +60,24 @@ namespace Server
                 }
             }
         }
+
+        static void TikTak()//Чтобы считать каждый день
+        {
+            Data.SetTime = DateTime.Now;
+            while (true)
+            {
+                Task.Delay(1000).Wait();
+
+                if(DateTime.Now.Day != Data.SetTime.Day)
+                {
+                    //Изменение времени во всех самолётах
+
+                    
+                }
+            }
+        }
+
+        #endregion
 
         #region Прослушка клиента
 
@@ -92,13 +117,18 @@ namespace Server
                     database.AddHagar(with, height, length, name);
                     SendHangars(clientInfo);
                 }
-                else if (answer.Contains("UPDPOZ"))//Загрузка инфы о самолётох
+                else if (answer.Contains("RUPDP"))//Загрузка инфы о самолётох
                 {
                     Algo algo = new Algo(database.GetInfoPlanes());
                     List<Data.InfoPlane> infos = algo.Work();
                     foreach (Data.InfoPlane i in infos)
-                        clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}"));
-                    
+                        //clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}"));
+
+                        //clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"UPDPOZ:{i.ID}:{i.X}:{i.Y}:{i.Height}:{i.Leugth}:{i.Money}:{i.Name}:{i.OneDayMoney}:{i.PlaneHeight}:" +
+                        //    $"{i.StartTime}:{i.Time}:{i.With}:{i.ErrorMoney}:{i.FinishTime}"));
+
+                        clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP:{i.ID}:{i.Name}:{i.X}:{i.Y}:{i.StartTime.Date}:{i.FinishTime.Date}:" +
+                            $"{i.Time.Date}:{i.Leugth}:{i.With}:{i.Money}:{i.OneDayMoney}:{i.ErrorMoney}"));
                 }
             }
         }

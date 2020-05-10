@@ -26,6 +26,12 @@ namespace Server
             connection.Open();
         }
 
+        public void SetAnyTime(DateTime date)//Изменить у всех самолётов время (таблица time)
+        {
+            MySqlCommand command = new MySqlCommand("SELECT * FROM hangars", connection);
+            //TODO
+        }
+
         public List<Data.InfoPlane> GetInfoPlanes()//Получить всю инфу о самолётах
         {
             MySqlCommand command = new MySqlCommand("SELECT * FROM hangars", connection);
