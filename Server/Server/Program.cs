@@ -164,15 +164,13 @@ namespace Server
                     try
                     {
                         var planes = database.GetPlanes(int.Parse(answer.Substring(5)));//Лютая херня!!!
-                        Task.Delay(300).Wait();
 
                         foreach (Data.InfoPlane plane in planes)
                         {
-                            Console.WriteLine(22);
+                            Task.Delay(800).Wait();
                             clientInfo.TcpClient.Client.Send(Encoding.UTF8.GetBytes($"RUPDP;{plane.ID};{plane.Name};{plane.X};{plane.Y};{plane.StartTime.Date};{plane.FinishTime.Date};" +
                                     $"{plane.Time.Date};{plane.Leugth};{plane.With};{plane.Money};{plane.OneDayMoney};{plane.ErrorMoney}"));
                         }
-                        Console.WriteLine(33);
                         Functions.WriteLine($"UPDP от {clientInfo.TcpClient.Client.RemoteEndPoint}", ConsoleColor.Green);
                     }
                     catch (Exception ex)

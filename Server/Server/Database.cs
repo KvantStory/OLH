@@ -29,60 +29,58 @@ namespace Server
 
         public List<Data.InfoPlane> GetPlanes(int id)//Получение самолёта по id по ангару
         {
-            Console.WriteLine(4);
             MySqlCommand command = new MySqlCommand($"SELECT nametable FROM hangars WHERE idhangar = {id}", connection);
             string nametable = command.ExecuteScalar().ToString();
             command = new MySqlCommand($"SELECT * FROM {nametable}", connection);
             var read = command.ExecuteReader();
             List<Data.InfoPlane> info = new List<Data.InfoPlane>();
             List<int> ids = new List<int>();
-            Console.WriteLine(3);
             while (read.Read())
             {
                 int idplane = read.GetInt32("idplane");
 
                 ids.Add(idplane);
             }
-            Console.WriteLine(4);
             string commandstrings = "SELECT * FROM planes WHERE ";
 
             foreach (int i in ids)
             {
-                commandstrings += $"`idplane` = {i} AND";
+                commandstrings += $"`idplane` = {i} AND ";
             }
             
-            Console.WriteLine(4);
             command.Dispose();
             read.Close();
-            MySqlCommand commandi = new MySqlCommand($"SELECT * FROM planes WHERE {commandstrings.Remove(commandstrings.Length - 1, 1)}", connection);//LOL
-            Console.WriteLine(commandstrings);
-            Console.WriteLine($"SELECT * FROM planes WHERE {commandstrings.Remove(commandstrings.Length - 4, 4)}");
 
-            MySqlDataReader readi = commandi.ExecuteReader();
-            Console.WriteLine(4);
-            while (readi.Read())
+            foreach (int i in ids)
             {
-                int idplane = readi.GetInt32("idplane");
-                string name = readi.GetString("name");
-                DateTime starttime = readi.GetDateTime("strarttime");//LOL
-                int with = readi.GetInt32("with");
-                int height = readi.GetInt32("height");
-                DateTime finishtime = readi.GetDateTime("finishtime");
-                DateTime time = readi.GetDateTime("time");
-                int length = readi.GetInt32("length");
-                int x = readi.GetInt32("x");
-                int y = readi.GetInt32("y");
-                int planeheight = readi.GetInt32("planeheight");
-                int money = readi.GetInt32("money");
-                int onedaymoney = readi.GetInt32("onedaymoney");
-                int errormoney = readi.GetInt32("errormoney");
 
-                info.Add(new Data.InfoPlane(idplane, name, starttime, with, height, finishtime, time, length, x, y, planeheight, money,
-                    onedaymoney, errormoney));
+                MySqlCommand commandi = new MySqlCommand($"SELECT * FROM planes WHERE `idplane` = {i}", connection);//LOL
 
-               
+                MySqlDataReader readi = commandi.ExecuteReader();
+                while (readi.Read())
+                {
+                    int idplane = readi.GetInt32("idplane");
+                    string name = readi.GetString("name");
+                    DateTime starttime = readi.GetDateTime("strarttime");//LOL
+                    int with = readi.GetInt32("with");
+                    int height = readi.GetInt32("height");
+                    DateTime finishtime = readi.GetDateTime("finishtime");
+                    DateTime time = readi.GetDateTime("time");
+                    int length = readi.GetInt32("length");
+                    int x = readi.GetInt32("x");
+                    int y = readi.GetInt32("y");
+                    int planeheight = readi.GetInt32("planeheight");
+                    int money = readi.GetInt32("money");
+                    int onedaymoney = readi.GetInt32("onedaymoney");
+                    int errormoney = readi.GetInt32("errormoney");
+
+                    info.Add(new Data.InfoPlane(idplane, name, starttime, with, height, finishtime, time, length, x, y, planeheight, money,
+                        onedaymoney, errormoney));
+                }
+
+                commandi.Dispose();
+                readi.Close();
             }
-            Console.WriteLine(4);
             return info;
 
             /*
